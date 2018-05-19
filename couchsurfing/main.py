@@ -7,6 +7,7 @@ def is_user_desirable(user):
 
 def main():
     # This file should contain your couchsurfing email and password, seperated by a newline.
+    # This file should contain your couchsurfing email and password, separated by a newline.
     with open(r'C:\temp\courchsurfing_credentials.txt', 'r') as f:
         email, password = f.readline().strip(), f.readline().strip()
 
