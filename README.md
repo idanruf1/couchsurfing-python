@@ -1,6 +1,18 @@
-couchsurfing-python
+couchsurfing-python - with hangouts
 ===================
+This is an improvement upon nderkach's couchsurfing-python, with support for hangouts API.
 
+some of the new functions:
+
+* Retrieve available hangouts:
+	api.get_hangouts()
+* Request to hangout with someone:
+	request_hangout(userID)
+	
+There is also an exemplary main inlcuded, which filters the available users to fit in a certain age, and sends then a hangout request. 
+
+Original documentation
+===================
 *UPDATE*: this package is not actively mainated anymore
 
 I also wrote a guide (https://www.toptal.com/back-end/reverse-engineering-the-private-api-hacking-your-couch) about the techniques I used to reverse engineer this and other APIs.
