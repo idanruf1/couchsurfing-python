@@ -243,13 +243,13 @@ class Api(object):
         self.latitude = latitue
         self.longtitude = longtitude
 
-    def join_hangouts(self, perPage=999999999):
+    def join_hangouts(self, perPage=25):
         path = "/api/v3.1/hangouts/joined?perPage=" + str(perPage) +\
                "&lat=" + str(self.latitude) + "&lng=" + str(self.longtitude)
 
         return self.api_get(path)
 
-    def get_hangouts(self, perPage=999999999):
+    def get_hangouts(self, perPage=25):
         path = "/api/v3.1/hangouts/search?perPage=" + str(perPage) + \
                "&lat=" + str(self.latitude) + "&lng=" + str(self.longtitude)
 
