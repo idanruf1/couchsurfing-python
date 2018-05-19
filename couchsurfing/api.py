@@ -103,12 +103,38 @@ class Api(object):
             "X-CS-Url-Signature": signature,
             "X-Access-Token": self._access_token
         })
+
+    def api_get(self, path):
+        self.api_request(path)
+
         r = self._session.get(CS_URL + path)
 
         if (r.status_code != 200):
+            print(r.status_code, r.reason, r.text)
             raise RequestError
 
         return r.json()
+
+    def api_put(self, path, data):
+        self.api_request(path)
+
+        r = self._session.put(CS_URL + path, data=json.dumps(data))
+        if (r.status_code != 200):
+            print(r.status_code, r.reason, r.text)
+            raise RequestError
+
+        return r.json()
+
+    def api_post(self, path, data):
+        self.api_request(path)
+
+        r = self._session.post(CS_URL + path, data=json.dumps(data))
+        if (r.status_code != 200):
+            print(r.status_code, r.reason, r.text)
+            raise RequestError
+
+        return r.json()
+
 
     def get_friendlist(self, uid, perPage=999999999):
         """
@@ -128,7 +154,7 @@ class Api(object):
         """
         path = "/api/v3/users/" + str(self.uid)
 
-        return self.api_request(path)
+        return self.api_get(path)
 
     def get_profile_by_id(self, uid):
         """
@@ -136,7 +162,7 @@ class Api(object):
         """
         path = "/api/v3/users/" + str(uid)
 
-        return self.api_request(path)
+        return self.api_get(path)
 
     def get_events(self, latlng, perpage=100):
         """
@@ -146,7 +172,7 @@ class Api(object):
                 "?page=1&perPage={perpage}&latLng={latlng}".format(
                     perpage=perpage, latlng=latlng))
 
-        return self.api_request(path)
+        return self.api_get(path)
 
     def get_visits(self, place_name, radius=10,
                    perpage=100, place_id=None, filters=None):
@@ -169,7 +195,7 @@ class Api(object):
         query = urlencode(params)
         path = "/api/v3.2/visits/search?%s" % query
 
-        return self.api_request(path)
+        return self.api_get(path)
 
     def get_hosts(self, place_name, radius=10,
                   perpage=100, place_id=None, sort='best_match',
@@ -197,7 +223,7 @@ class Api(object):
         query = urlencode(params)
         path = "/api/v3.2/users/search?%s" % query
 
-        return self.api_request(path)
+        return self.api_get(path)
 
     def get_references(self, uid, type, perPage=999999999):
         """
@@ -211,7 +237,42 @@ class Api(object):
             "&relationshipType=" + type + "&includeReferenceMeta=true"
         )
 
-        return self.api_request(path)
+        return self.api_get(path)
+
+    def update_location(self, latitue, longtitude):
+        self.latitude = latitue
+        self.longtitude = longtitude
+
+    def join_hangouts(self, perPage=999999999):
+        path = "/api/v3.1/hangouts/joined?perPage=" + str(perPage) +\
+               "&lat=" + str(self.latitude) + "&lng=" + str(self.longtitude)
+
+        return self.api_get(path)
+
+    def get_hangouts(self, perPage=999999999):
+        path = "/api/v3.1/hangouts/search?perPage=" + str(perPage) + \
+               "&lat=" + str(self.latitude) + "&lng=" + str(self.longtitude)
+
+        return self.api_get(path)
+
+    def request_hangout(self, id):
+        path = "/api/v3.1/hangouts/requests"
+        data = {
+            "status": "pending",
+            "type": "userStatus",
+            "typeId": str(id)
+        }
+
+        return self.api_post(path, data)
+
+    def accept_hangout_request(self, id):
+        path = "/api/v3.1/hangouts/requests" + str(id)
+        data = {
+            "id": str(id),
+            "status": "accept"
+        }
+
+        return self.api_put(path, data)
 
 
 if __name__ == "__main__":
