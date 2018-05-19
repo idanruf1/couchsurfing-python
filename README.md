@@ -5,9 +5,12 @@ This is an improvement upon nderkach's couchsurfing-python, with support for han
 some of the new functions:
 
 * Retrieve available hangouts:
-	api.get_hangouts()
+
+         api.get_hangouts()
+	 
 * Request to hangout with someone:
-	request_hangout(userID)
+
+          request_hangout(userID)
 	
 There is also an exemplary main inlcuded, which filters the available users to fit in a certain age, and sends then a hangout request. 
 
