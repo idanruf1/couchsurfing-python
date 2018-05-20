@@ -50,7 +50,7 @@ class Api(object):
         return hmac.new(
             key.encode("utf-8"), msg.encode("utf-8"), sha1).hexdigest()
 
-    def __init__(self, username=None, password=None,
+    def __init__(self, username=None, password=None, latitude=None, longitude=None,
                  uid=None, access_token=None):
         self._session = requests.Session()
         if uid and access_token:
@@ -89,6 +89,9 @@ class Api(object):
             r.raise_for_status()
             self.uid = int(r.json()["sessionUser"]["id"])
             self._access_token = r.json()["sessionUser"]["accessToken"]
+
+        self.latitude = latitude
+        self.longitude = longitude
 
     def api_request(self, path):
         """
@@ -239,19 +242,21 @@ class Api(object):
 
         return self.api_get(path)
 
-    def update_location(self, latitue, longtitude):
-        self.latitude = latitue
-        self.longtitude = longtitude
+    def update_location(self, latitude, longitude):
+        self.latitude = latitude
+        self.longitude = longitude
 
     def join_hangouts(self, perPage=25):
-        path = "/api/v3.1/hangouts/joined?perPage=" + str(perPage) +\
-               "&lat=" + str(self.latitude) + "&lng=" + str(self.longtitude)
+        assert(self.latitude and self.longitude)
+        path = "/api/v3.1/hangouts/joined?includePastHangouts=True&perPage=" + str(perPage) +\
+               "&lat=" + str(self.latitude) + "&lng=" + str(self.longitude)
 
         return self.api_get(path)
 
     def get_hangouts(self, perPage=25):
+        assert (self.latitude and self.longitude)
         path = "/api/v3.1/hangouts/search?perPage=" + str(perPage) + \
-               "&lat=" + str(self.latitude) + "&lng=" + str(self.longtitude)
+               "&lat=" + str(self.latitude) + "&lng=" + str(self.longitude)
 
         return self.api_get(path)
 
